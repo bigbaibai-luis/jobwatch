@@ -105,6 +105,17 @@ jobwatch --source rss --url "https://example.com/jobs/rss.xml" --keywords "pytho
 
 > 示例：V2EX 等社区会发布职位 feed（如 `/feed/tab/jobs.xml`）。请使用官方 feed 地址，并遵守站点的频率限制。
 
+### 国内职位源（合规）
+
+主流国内招聘站（Boss直聘 / 拉勾 / 猎聘 / 51job / 智联）条款禁止爬取且无公开 RSS——**不要去抓**。改用发布 RSS/JSON 的社区/平台，例如 V2EX「酷工作」（Atom）：
+
+```bash
+jobwatch --source rss --url "https://www.v2ex.com/feed/tab/jobs.xml" --keywords "后端,工程师,开发" --no-verify-ssl --state v2ex.state.json
+```
+
+- `--no-verify-ssl` 是临时绕过该站点的证书链问题；
+- 每个源用单独的 `--state` 文件，避免 id 混在一起。
+
 ## 定时运行
 
 **Linux/macOS（cron）** —— 每 30 分钟：

@@ -90,6 +90,8 @@ def parse_rss(xml_text: str) -> list[dict]:
     for it in items:
         title = _text(it, "title")
         link = _link(it)
+        if link:
+            link = link.split("#", 1)[0]
         guid = _text(it, "guid") or _text(it, "id") or link
         if not title:
             continue

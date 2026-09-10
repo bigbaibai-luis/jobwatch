@@ -107,6 +107,17 @@ jobwatch --source rss --url "https://example.com/jobs/rss.xml" --keywords "pytho
 
 > Example: communities like V2EX publish job feeds (`/feed/tab/jobs.xml`). Use the official feed URL and respect the site's rate limits.
 
+### Chinese job sources (compliant)
+
+Mainstream Chinese boards (Boss直聘 / 拉勾 / 猎聘 / 51job / 智联) prohibit scraping and offer no public RSS — do **not** scrape them. Use boards/communities that publish RSS/JSON instead, e.g. V2EX "酷工作" (Atom):
+
+```bash
+jobwatch --source rss --url "https://www.v2ex.com/feed/tab/jobs.xml" --keywords "后端,工程师,开发" --no-verify-ssl --state v2ex.state.json
+```
+
+- `--no-verify-ssl` works around that site's broken cert chain (temporary).
+- Use a separate `--state` file per source to keep ids isolated.
+
 ## Run it on a schedule
 
 **Linux/macOS (cron)** — every 30 minutes:
