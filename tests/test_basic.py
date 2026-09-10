@@ -1,8 +1,9 @@
+import json
 import os
 import tempfile
 import unittest
 
-from jobwatch.core import _format, _match
+from jobwatch.core import _format, _match, load_config
 from jobwatch.state import State
 from jobwatch.sources import parse_rss
 
@@ -79,6 +80,20 @@ class TestRss(unittest.TestCase):
         self.assertEqual(jobs[0]["title"], "Python Dev")
         self.assertEqual(jobs[0]["id"], "tag:example.com:/t/1")
         self.assertEqual(jobs[0]["url"], "https://x/t/1#reply2")
+
+
+class TestConfig(unittest.TestCase):
+    def test_load_config(self):
+        with tempfile.TemporaryDirectory() as d:
+            path = os.path.join(d, "c.json")
+            with open(path, "w", encoding="utf-8") as fh:
+                json.dump(
+                    {"monitors": [{"source": "remoteok"}, {"source": "rss", "url": "x"}]},
+                    fh,
+                )
+            specs = load_config(path)
+            self.assertEqual(len(specs), 2)
+            self.assertEqual(specs[0]["source"], "remoteok")
 
 
 if __name__ == "__main__":

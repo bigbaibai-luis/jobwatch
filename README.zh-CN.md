@@ -116,6 +116,25 @@ jobwatch --source rss --url "https://www.v2ex.com/feed/tab/jobs.xml" --keywords 
 - `--no-verify-ssl` 是临时绕过该站点的证书链问题；
 - 每个源用单独的 `--state` 文件，避免 id 混在一起。
 
+## 多监控配置
+
+用 JSON 文件一次跑多个监控：
+
+```json
+{
+  "monitors": [
+    {"label": "remote-python", "source": "remoteok", "keywords": "python", "notify": "console"},
+    {"label": "v2ex-backend", "source": "rss", "url": "https://www.v2ex.com/feed/tab/jobs.xml", "keywords": "后端,工程师", "notify": "serverchan", "sendkey": "SCT...", "state": "v2ex.state.json", "no_verify_ssl": true}
+  ]
+}
+```
+
+```bash
+jobwatch --config monitors.json
+```
+
+每个 monitor 的字段和命令行参数一致（`source`、`url`、`keywords`、`limit`、`state`、`notify`、`webhook_url`、`sendkey`、`no_verify_ssl`，html 源还有 `item_selector` 等）。见 [examples/monitors.example.json](examples/monitors.example.json)。
+
 ## 定时运行
 
 **Linux/macOS（cron）** —— 每 30 分钟：

@@ -118,6 +118,25 @@ jobwatch --source rss --url "https://www.v2ex.com/feed/tab/jobs.xml" --keywords 
 - `--no-verify-ssl` works around that site's broken cert chain (temporary).
 - Use a separate `--state` file per source to keep ids isolated.
 
+## Multi-monitor config
+
+Run several monitors at once from a JSON file:
+
+```json
+{
+  "monitors": [
+    {"label": "remote-python", "source": "remoteok", "keywords": "python", "notify": "console"},
+    {"label": "v2ex-backend", "source": "rss", "url": "https://www.v2ex.com/feed/tab/jobs.xml", "keywords": "后端,工程师", "notify": "serverchan", "sendkey": "SCT...", "state": "v2ex.state.json", "no_verify_ssl": true}
+  ]
+}
+```
+
+```bash
+jobwatch --config monitors.json
+```
+
+Each monitor accepts the same fields as the CLI flags (`source`, `url`, `keywords`, `limit`, `state`, `notify`, `webhook_url`, `sendkey`, `no_verify_ssl`, and for `html`: `item_selector`, `title_selector`, `link_selector`, `id_selector`, `base_url`). See [examples/monitors.example.json](examples/monitors.example.json).
+
 ## Run it on a schedule
 
 **Linux/macOS (cron)** — every 30 minutes:

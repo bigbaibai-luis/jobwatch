@@ -1,0 +1,19 @@
+{
+  "monitors": [
+    {
+      "label": "remote-python",
+      "source": "remoteok",
+      "keywords": "python",
+      "notify": "console"
+    },
+    {
+      "label": "v2ex-backend",
+      "source": "rss",
+      "url": "https://www.v2ex.com/feed/tab/jobs.xml",
+      "keywords": "后端,工程师,开发",
+      "notify": "console",
+      "state": "v2ex.state.json",
+      "no_verify_ssl": true
+    }
+  ]
+}

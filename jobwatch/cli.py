@@ -25,6 +25,7 @@ def main(argv=None) -> int:
                    help="Send a test notification via the configured channel and exit")
     p.add_argument("--no-verify-ssl", action="store_true",
                    help="Skip SSL cert verification (insecure; workaround for expired/misconfigured certs)")
+    p.add_argument("--config", help="Path to a JSON config file with a 'monitors' list")
 
     # html source options
     p.add_argument("--url", help="(html) job board page URL")
@@ -36,10 +37,11 @@ def main(argv=None) -> int:
 
     args = p.parse_args(argv)
 
-    if args.source == "html" and not (args.url and args.item_selector and args.title_selector):
-        p.error("--source html requires --url, --item-selector, and --title-selector")
-    if args.source == "rss" and not args.url:
-        p.error("--source rss requires --url")
+    if not args.config:
+        if args.source == "html" and not (args.url and args.item_selector and args.title_selector):
+            p.error("--source html requires --url, --item-selector, and --title-selector")
+        if args.source == "rss" and not args.url:
+            p.error("--source rss requires --url")
 
     return run(args)
 
