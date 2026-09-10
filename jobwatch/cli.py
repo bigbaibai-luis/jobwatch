@@ -11,7 +11,7 @@ def main(argv=None) -> int:
         prog="jobwatch",
         description="Monitor job boards and get notified about new postings.",
     )
-    p.add_argument("--source", choices=["remoteok", "html"], default="remoteok",
+    p.add_argument("--source", choices=["remoteok", "html", "rss"], default="remoteok",
                    help="Job source (default: remoteok)")
     p.add_argument("--keywords", help="Comma-separated keywords (match title/company/tags)")
     p.add_argument("--limit", type=int, default=0, help="Max jobs to consider (0 = no limit)")
@@ -38,6 +38,8 @@ def main(argv=None) -> int:
 
     if args.source == "html" and not (args.url and args.item_selector and args.title_selector):
         p.error("--source html requires --url, --item-selector, and --title-selector")
+    if args.source == "rss" and not args.url:
+        p.error("--source rss requires --url")
 
     return run(args)
 

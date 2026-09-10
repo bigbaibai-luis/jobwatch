@@ -5,14 +5,25 @@ Job dict keys: id, title, company, location, url, salary, tags, posted
 from __future__ import annotations
 
 import json
+import ssl
 import urllib.request
+import xml.etree.ElementTree as ET
 
 USER_AGENT = "jobwatch/0.1 (+https://github.com/bigbaibai-luis/jobwatch)"
 
 
-def _get(url: str, timeout: int = 30) -> bytes:
+def _context(verify: bool):
+    if verify:
+        return None
+    ctx = ssl.create_default_context()
+    ctx.check_hostname = False
+    ctx.verify_mode = ssl.CERT_NONE
+    return ctx
+
+
+def _get(url: str, timeout: int = 30, verify: bool = True) -> bytes:
     req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
-    with urllib.request.urlopen(req, timeout=timeout) as resp:
+    with urllib.request.urlopen(req, timeout=timeout, context=_context(verify)) as resp:
         return resp.read()
 
 
@@ -26,13 +37,13 @@ def _salary(min_v, max_v) -> str:
     return ""
 
 
-def fetch_remoteok() -> list[dict]:
+def fetch_remoteok(verify: bool = True) -> list[dict]:
     """Fetch remote jobs from the RemoteOK public JSON API.
 
     RemoteOK's API ToS asks that you link back to RemoteOK and mention it
     as a source if you build on top of it.
     """
-    data = json.loads(_get("https://remoteok.com/api").decode("utf-8"))
+    data = json.loads(_get("https://remoteok.com/api", verify=verify).decode("utf-8"))
     jobs = []
     for item in data:
         if not isinstance(item, dict) or "id" not in item:
@@ -50,6 +61,56 @@ def fetch_remoteok() -> list[dict]:
             }
         )
     return jobs
+
+
+def _text(elem, tag: str) -> str:
+    for child in elem.iter():
+        if child.tag == tag or child.tag.endswith("}" + tag):
+            return (child.text or "").strip()
+    return ""
+
+
+def _link(elem) -> str:
+    for child in elem.iter():
+        if child.tag == "link" or child.tag.endswith("}link"):
+            href = child.get("href")
+            if href:
+                return href
+            return (child.text or "").strip()
+    return ""
+
+
+def parse_rss(xml_text: str) -> list[dict]:
+    """Parse an RSS 2.0 or Atom feed into job dicts (pure function)."""
+    root = ET.fromstring(xml_text)
+    items = list(root.iter("item"))
+    if not items:
+        items = [e for e in root.iter() if e.tag == "entry" or e.tag.endswith("}entry")]
+    jobs = []
+    for it in items:
+        title = _text(it, "title")
+        link = _link(it)
+        guid = _text(it, "guid") or _text(it, "id") or link
+        if not title:
+            continue
+        jobs.append(
+            {
+                "id": guid or link or title,
+                "title": title,
+                "company": "",
+                "location": "",
+                "url": link,
+                "salary": "",
+                "tags": [],
+                "posted": _text(it, "pubDate") or _text(it, "updated") or "",
+            }
+        )
+    return jobs
+
+
+def fetch_rss(url: str, verify: bool = True) -> list[dict]:
+    """Fetch and parse an RSS/Atom feed (works with any board that publishes RSS)."""
+    return parse_rss(_get(url, verify=verify).decode("utf-8", errors="replace"))
 
 
 def fetch_scrapling_html(

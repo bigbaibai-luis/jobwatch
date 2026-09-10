@@ -97,6 +97,16 @@ jobwatch --source html \
 > position, which is **not stable** across runs. Provide a stable `--id-selector`
 > for reliable change detection. And always respect the target's `robots.txt` and ToS.
 
+## RSS / Atom source (compliant job feeds)
+
+Any job board or community that publishes an RSS/Atom feed can be monitored — this is the cleanest way to watch sources whose ToS prohibit HTML scraping.
+
+```bash
+jobwatch --source rss --url "https://example.com/jobs/rss.xml" --keywords "python"
+```
+
+> Example: communities like V2EX publish job feeds (`/feed/tab/jobs.xml`). Use the official feed URL and respect the site's rate limits.
+
 ## Run it on a schedule
 
 **Linux/macOS (cron)** — every 30 minutes:

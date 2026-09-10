@@ -41,7 +41,7 @@ def run(args) -> int:
 
     # 1. fetch
     if args.source == "remoteok":
-        jobs = sources.fetch_remoteok()
+        jobs = sources.fetch_remoteok(verify=not args.no_verify_ssl)
     elif args.source == "html":
         jobs = sources.fetch_scrapling_html(
             url=args.url,
@@ -51,6 +51,8 @@ def run(args) -> int:
             id_selector=args.id_selector,
             base_url=args.base_url or args.url,
         )
+    elif args.source == "rss":
+        jobs = sources.fetch_rss(args.url, verify=not args.no_verify_ssl)
     else:
         print(f"error: unknown source {args.source}")
         return 2

@@ -95,6 +95,16 @@ jobwatch --source html \
 
 > **注意：** 不传 `--id-selector` 时，职位 id 退化为"列表位置"，**不稳定**（新职位会挤位置）。请提供一个稳定的 `--id-selector` 才能可靠检测变化。并且务必遵守目标网站的 `robots.txt` 和服务条款。
 
+## RSS / Atom 源（合规的职位订阅）
+
+任何发布 RSS/Atom feed 的招聘平台/社区都可以监控——这是监控「条款禁止爬 HTML」的网站时最干净的方式。
+
+```bash
+jobwatch --source rss --url "https://example.com/jobs/rss.xml" --keywords "python"
+```
+
+> 示例：V2EX 等社区会发布职位 feed（如 `/feed/tab/jobs.xml`）。请使用官方 feed 地址，并遵守站点的频率限制。
+
 ## 定时运行
 
 **Linux/macOS（cron）** —— 每 30 分钟：
