@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "jobwatch"
+version = "0.1.0"
+description = "Monitor job boards and get notified about new postings."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+dependencies = []
+keywords = ["jobs", "monitoring", "scraping", "scrapling", "automation", "remoteok"]
+
+[project.optional-dependencies]
+scrapling = ["scrapling[fetchers]>=0.5.0"]
+
+[project.scripts]
+jobwatch = "jobwatch.cli:main"
+
+[tool.setuptools]
+packages = ["jobwatch"]
