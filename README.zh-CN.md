@@ -60,6 +60,25 @@ jobwatch --keywords "python" --notify webhook --webhook-url "https://your-webhoo
 jobwatch --keywords "python" --notify serverchan --sendkey "SCTxxxxx"
 ```
 
+## 微信推送（Server酱）设置
+
+`jobwatch` 内置了 **Server酱（ServerChan）**，可以把新职位提醒直接推到你的微信。
+
+1. 打开 [sct.ftqq.com](https://sct.ftqq.com)，用 **GitHub 账号** 一键登录；
+2. 按提示**微信扫码关注「方糖」公众号**（消息就是通过这个公众号发到微信）；
+3. 在 **SendKey** 页面复制你的 key（形如 `SCT123456...`）；
+4. 用 `--test-notify` 发一条测试消息验证：
+   ```bash
+   jobwatch --notify serverchan --sendkey "SCT123456..." --test-notify
+   ```
+   微信收到「jobwatch test」就说明通了；
+5. 之后正常使用：
+   ```bash
+   jobwatch --keywords "python" --notify serverchan --sendkey "SCT123456..."
+   ```
+
+> 提示：`--test-notify` 对 webhook 同样适用，可用来验证任何通知渠道。
+
 ## 自定义招聘网站（Scrapling 抓 HTML）
 
 对**你有权采集**的网站，提供 CSS 选择器：

@@ -21,6 +21,10 @@ def main(argv=None) -> int:
     p.add_argument("--webhook-url", help="Webhook URL for --notify webhook")
     p.add_argument("--sendkey", help="ServerChan SendKey for --notify serverchan")
     p.add_argument("--dry-run", action="store_true", help="Do not save state")
+    p.add_argument("--test-notify", action="store_true",
+                   help="Send a test notification via the configured channel and exit")
+    p.add_argument("--no-verify-ssl", action="store_true",
+                   help="Skip SSL cert verification (insecure; workaround for expired/misconfigured certs)")
 
     # html source options
     p.add_argument("--url", help="(html) job board page URL")

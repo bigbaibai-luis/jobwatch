@@ -60,6 +60,25 @@ jobwatch --keywords "python" --notify webhook --webhook-url "https://your-webhoo
 jobwatch --keywords "python" --notify serverchan --sendkey "SCTxxxxx"
 ```
 
+## WeChat push (ServerChan) setup
+
+`jobwatch` ships with **ServerChan (Server酱)** support to push alerts straight to WeChat.
+
+1. Open [sct.ftqq.com](https://sct.ftqq.com) and log in with **GitHub**.
+2. Scan the QR code to follow the **方糖 (FTQQ)** official account — messages arrive through it.
+3. Copy your **SendKey** from the SendKey page (looks like `SCT123456...`).
+4. Send a test message to verify:
+   ```bash
+   jobwatch --notify serverchan --sendkey "SCT123456..." --test-notify
+   ```
+   You should see "jobwatch test" in WeChat.
+5. Then use it normally:
+   ```bash
+   jobwatch --keywords "python" --notify serverchan --sendkey "SCT123456..."
+   ```
+
+> Tip: `--test-notify` also works with `webhook` to verify any channel.
+
 ## Custom job board (HTML via Scrapling)
 
 For sites you are **authorized** to scrape, provide CSS selectors:

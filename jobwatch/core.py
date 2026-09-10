@@ -27,6 +27,18 @@ def _format(job: dict) -> str:
 
 
 def run(args) -> int:
+    if args.test_notify:
+        notify.send(
+            args.notify,
+            "jobwatch test",
+            ["This is a test notification from jobwatch."],
+            args.webhook_url,
+            args.sendkey,
+            verify=not args.no_verify_ssl,
+        )
+        print("Test notification sent.")
+        return 0
+
     # 1. fetch
     if args.source == "remoteok":
         jobs = sources.fetch_remoteok()
@@ -60,7 +72,14 @@ def run(args) -> int:
             print("  " + _format(j))
     elif new:
         title = f"{len(new)} new job(s) matching your keywords"
-        notify.send(args.notify, title, [_format(j) for j in new], args.webhook_url, args.sendkey)
+        notify.send(
+            args.notify,
+            title,
+            [_format(j) for j in new],
+            args.webhook_url,
+            args.sendkey,
+            verify=not args.no_verify_ssl,
+        )
     else:
         print("No new jobs.")
 
