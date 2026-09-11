@@ -79,7 +79,7 @@ class TestRss(unittest.TestCase):
         self.assertEqual(len(jobs), 1)
         self.assertEqual(jobs[0]["title"], "Python Dev")
         self.assertEqual(jobs[0]["id"], "tag:example.com:/t/1")
-        self.assertEqual(jobs[0]["url"], "https://x/t/1#reply2")
+        self.assertEqual(jobs[0]["url"], "https://x/t/1")
 
 
 class TestConfig(unittest.TestCase):
